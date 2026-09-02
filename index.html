@@ -386,13 +386,8 @@ async function autoCreateStorage(){
 }
 
 function showAdminStorageBanner(){
-  if (!BIN_ID){
-    showSetupBanner('creating');
-    autoCreateStorage();
-    return;
-  }
-  document.getElementById('blobIdDisplay').textContent = BIN_ID;
-  showSetupBanner('ready');
+  /* ID sudah hardcode, tidak perlu banner lagi */
+  return;
 }
 
 async function createStorage(){
