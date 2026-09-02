@@ -286,12 +286,11 @@
 </div>
 
 <script>
-/* ====== KONFIGURASI PENYIMPANAN ====== */
-/* GANTI DI SINI: tempel ID blob kamu sendiri di antara tanda kutip di bawah ini
-   setelah menekan "Buat penyimpanan baru" pada halaman ini. Contoh:
-   const BLOB_ID = "a1b2c3d4-...";                                            */
-const BLOB_ID = "GANTI_DENGAN_ID_BLOB_ANDA";
-const API_BASE = "https://jsonblob.com/api/jsonBlob/";
+/* ====== KONFIGURASI PENYIMPANAN (JSONBin.io) ====== */
+const JSONBIN_API_KEY = "$2a$10$mJZGWNeW2r29SrvHEPZkluI6L7RwHudO5l1dAB1.Lw1T2xWtBfQY.";
+const JSONBIN_BASE    = "https://api.jsonbin.io/v3/b";
+/* ID bin akan dibuat otomatis saat pertama kali dibuka, lalu disimpan di sini */
+let BIN_ID = localStorage.getItem('rt_bin_id') || null;
 
 /* GANTI juga kata sandi admin ini sebelum hosting */
 const ADMIN_PASSWORD = "Ruangtugas2026";
@@ -313,15 +312,12 @@ let state = {
   tasks: []
 };
 let isAdmin = false;
-let effectiveBlobId = BLOB_ID;
 
 function activeBlobId(){
-  if (BLOB_ID && BLOB_ID !== "GANTI_DENGAN_ID_BLOB_ANDA") return BLOB_ID;
-  return localStorage.getItem('rt_blobId_temp') || null;
+  return BIN_ID;
 }
 
 function showSetupBanner(mode){
-  /* mode: 'creating' | 'ready' | 'error' — hanya tampil saat admin aktif */
   if (!isAdmin) return;
   document.getElementById('setupBanner').style.display = 'block';
   document.getElementById('setupCreating').style.display = mode === 'creating' ? 'block' : 'none';
@@ -334,17 +330,18 @@ function hideSetupBanner(){
 }
 
 async function loadData(){
-  const id = activeBlobId();
-  if (!id){
-    /* Belum ada ID — buat otomatis (hanya perlu koneksi internet) */
+  if (!BIN_ID){
     render();
     autoCreateStorage();
     return;
   }
   try{
-    const res = await fetch(API_BASE + id);
+    const res = await fetch(`${JSONBIN_BASE}/${BIN_ID}/latest`, {
+      headers: { 'X-Master-Key': JSONBIN_API_KEY }
+    });
     if (!res.ok) throw new Error('not found');
-    state = await res.json();
+    const json = await res.json();
+    state = json.record;
     if (!state.profile.photo) state.profile.photo = PROFILE_PHOTO;
     render();
   }catch(e){
@@ -354,62 +351,60 @@ async function loadData(){
 }
 
 async function saveData(){
-  const id = activeBlobId();
-  if (!id) { await autoCreateStorage(); return; }
-  try {
-    await fetch(API_BASE + id, {
+  if (!BIN_ID){ await autoCreateStorage(); return; }
+  try{
+    await fetch(`${JSONBIN_BASE}/${BIN_ID}`, {
       method: 'PUT',
-      headers: {'Content-Type':'application/json'},
+      headers: { 'Content-Type':'application/json', 'X-Master-Key': JSONBIN_API_KEY },
       body: JSON.stringify(state)
     });
-  } catch(e) {
+  }catch(e){
     alert('Gagal menyimpan data. Periksa koneksi internet kamu.');
   }
 }
 
-/* Dipanggil otomatis saat halaman load — tidak butuh admin, cukup simpan ID ke localStorage */
 async function autoCreateStorage(){
   try{
-    const res = await fetch('https://jsonblob.com/api/jsonBlob', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
+    const res = await fetch(JSONBIN_BASE, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': JSONBIN_API_KEY,
+        'X-Bin-Name': 'ruang-tugas',
+        'X-Collection-Id': ''
+      },
       body: JSON.stringify(state)
     });
-    const location = res.headers.get('Location');
-    const newId = location.split('/').pop();
-    localStorage.setItem('rt_blobId_temp', newId);
-    /* Kalau admin sedang aktif, langsung tampilkan bannernya */
+    if (!res.ok) throw new Error('gagal');
+    const json = await res.json();
+    BIN_ID = json.metadata.id;
+    localStorage.setItem('rt_bin_id', BIN_ID);
     if (isAdmin) showAdminStorageBanner();
   }catch(e){
     if (isAdmin) showSetupBanner('error');
   }
 }
 
-/* Tampilkan info storage yang relevan untuk admin */
 function showAdminStorageBanner(){
-  const id = activeBlobId();
-  if (!id){
+  if (!BIN_ID){
     showSetupBanner('creating');
     autoCreateStorage();
     return;
   }
-  /* Sudah ada ID — tampilkan banner 'ready' dengan ID-nya */
-  document.getElementById('blobIdDisplay').textContent = id;
+  document.getElementById('blobIdDisplay').textContent = BIN_ID;
   showSetupBanner('ready');
 }
 
-/* Tombol fallback jika auto-create gagal */
 async function createStorage(){
   showSetupBanner('creating');
   await autoCreateStorage();
 }
 
 function copyBlobId(){
-  const id = activeBlobId();
-  if (!id) return;
-  navigator.clipboard.writeText(id).then(() => alert('ID berhasil disalin: ' + id)).catch(() => {
-    prompt('Salin ID ini:', id);
-  });
+  if (!BIN_ID) return;
+  navigator.clipboard.writeText(BIN_ID)
+    .then(() => alert('ID berhasil disalin: ' + BIN_ID))
+    .catch(() => prompt('Salin ID ini:', BIN_ID));
 }
 
 function initials(name){
@@ -500,11 +495,8 @@ function toggleAdmin(){
       isAdmin = true;
       document.getElementById('adminBtn').textContent = 'Keluar dari mode admin';
       document.getElementById('adminBtn').classList.add('on');
-      /* Tampilkan info penyimpanan jika belum di-hardcode */
-      if (!BLOB_ID || BLOB_ID === "GANTI_DENGAN_ID_BLOB_ANDA") {
-        showAdminStorageBanner();
-      }
-    } else {
+      /* Tampilkan info penyimpanan */
+      showAdminStorageBanner();    } else {
       alert('Kata sandi salah.');
       return;
     }
