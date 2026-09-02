@@ -344,15 +344,20 @@
 
   /* ── Cursor dot ── */
   #cursor-dot{
-    width:8px;height:8px;background:var(--gold);border-radius:50%;
+    width:10px;height:10px;background:var(--gold);border-radius:50%;
     position:fixed;pointer-events:none;z-index:99999;
-    transition:transform .1s ease;
+    transform:translate(-50%,-50%);
     mix-blend-mode:multiply;
+    will-change:transform;
   }
   #cursor-ring{
-    width:32px;height:32px;border:1.5px solid var(--gold-soft);border-radius:50%;
+    width:34px;height:34px;
+    border:2px solid var(--gold-soft);
+    border-radius:50%;
     position:fixed;pointer-events:none;z-index:99998;
-    transition:left .12s ease, top .12s ease, transform .2s ease;
+    transform:translate(-50%,-50%);
+    will-change:transform;
+    /* ring mengikuti dengan sedikit lag — dihandle JS, bukan CSS transition */
   }
 
   /* ===== MODAL ===== */
@@ -458,7 +463,7 @@
       <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l10-6 10 6-10 6-10-6z"/><path d="M6 14v5c0 1 3 3 6 3s6-2 6-3v-5"/><path d="M22 12v6"/></svg>
       Ruang Tugas <span>·</span> Belajar & Pembelajaran
     </div>
-    <button id="adminBtn" onclick="toggleAdmin()"><span></span>Masuk sebagai admin</span></button>
+    <button id="adminBtn" onclick="toggleAdmin()">Masuk sebagai admin</button>
   </div>
 
   <div id="setupBanner" class="setup" style="display:none;">
@@ -823,7 +828,7 @@ function escapeAttr(s){ return escapeHtml(s); }
 function toggleAdmin(){
   if (isAdmin){
     isAdmin = false;
-    document.querySelector('#adminBtn span').textContent = 'Masuk sebagai admin';
+    document.getElementById('adminBtn').textContent = 'Masuk sebagai admin';
     document.getElementById('adminBtn').classList.remove('on');
     hideSetupBanner();
     document.getElementById('formCard').style.display = 'none';
@@ -845,7 +850,7 @@ function submitPassword(){
   if (pw === ADMIN_PASSWORD){
     closePasswordModal();
     isAdmin = true;
-    document.querySelector('#adminBtn span').textContent = 'Keluar dari mode admin';
+    document.getElementById('adminBtn').textContent = 'Keluar dari mode admin';
     document.getElementById('adminBtn').classList.add('on');
     showAdminStorageBanner();
     document.getElementById('formCard').style.display = 'block';
@@ -988,27 +993,49 @@ setupReveal();
   const dot  = document.getElementById('cursor-dot');
   const ring = document.getElementById('cursor-ring');
   if(!dot || !ring) return;
-  let mx=0, my=0;
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    dot.style.left  = (mx - 4)  + 'px';
-    dot.style.top   = (my - 4)  + 'px';
-    ring.style.left = (mx - 16) + 'px';
-    ring.style.top  = (my - 16) + 'px';
-  });
-  document.addEventListener('mousedown', () => {
-    dot.style.transform  = 'scale(1.8)';
-    ring.style.transform = 'scale(.7)';
-  });
-  document.addEventListener('mouseup', () => {
-    dot.style.transform  = '';
-    ring.style.transform = '';
-  });
-  /* Sembunyikan di mobile */
   if('ontouchstart' in window){
     dot.style.display = 'none';
     ring.style.display = 'none';
+    return;
   }
+
+  let mx = window.innerWidth/2, my = window.innerHeight/2;
+  let rx = mx, ry = my;
+  const LERP = 0.18; /* kecepatan ring mengikuti: 0=diam, 1=instant */
+
+  /* dot selalu instant mengikuti mouse */
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top  = my + 'px';
+  }, {passive: true});
+
+  /* ring dengan animasi lerp via rAF */
+  function loop(){
+    rx += (mx - rx) * LERP;
+    ry += (my - ry) * LERP;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  document.addEventListener('mousedown', () => {
+    dot.style.transform  = 'translate(-50%,-50%) scale(1.8)';
+    ring.style.transform = 'translate(-50%,-50%) scale(0.65)';
+  });
+  document.addEventListener('mouseup', () => {
+    dot.style.transform  = 'translate(-50%,-50%) scale(1)';
+    ring.style.transform = 'translate(-50%,-50%) scale(1)';
+  });
+
+  /* Sembunyikan saat keluar window */
+  document.addEventListener('mouseleave', () => {
+    dot.style.opacity = '0'; ring.style.opacity = '0';
+  });
+  document.addEventListener('mouseenter', () => {
+    dot.style.opacity = '1'; ring.style.opacity = '1';
+  });
 })();
 
 loadData();
