@@ -8,178 +8,425 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#F6F1E4;
-    --paper-dim:#EFE8D6;
-    --ink:#26241D;
+    --paper:#F5F0E8;
+    --paper-dim:#EDE5D0;
+    --ink:#22201A;
     --ink-muted:#6B6558;
-    --pine:#1E3A34;
-    --pine-soft:#2B5148;
-    --gold:#B8862B;
-    --gold-soft:#DCC077;
+    --pine:#1A3830;
+    --pine-soft:#254D42;
+    --pine-glow:rgba(26,56,48,.15);
+    --gold:#C49A2E;
+    --gold-soft:#E2C97E;
+    --gold-glow:rgba(196,154,46,.2);
     --card:#FFFFFF;
-    --line:#E4DDC9;
+    --line:#E2D9C4;
     --danger:#A5432E;
+    --danger-soft:rgba(165,67,46,.1);
   }
-  *{box-sizing:border-box;}
+  *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
+
+  /* ── Scrollbar kustom ── */
+  ::-webkit-scrollbar{width:6px;}
+  ::-webkit-scrollbar-track{background:var(--paper-dim);}
+  ::-webkit-scrollbar-thumb{background:var(--gold-soft);border-radius:99px;}
+
   body{
-    margin:0;
-    background:
-      radial-gradient(circle at 6px 6px, rgba(30,58,52,0.05) 1.4px, transparent 1.4px) 0 0/26px 26px,
-      var(--paper);
+    background: var(--paper);
     color:var(--ink);
     font-family:'Work Sans', sans-serif;
-    line-height:1.55;
+    line-height:1.6;
+    min-height:100vh;
+    overflow-x:hidden;
   }
+
+  /* ── Partikel background bergerak ── */
+  #particles{
+    position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;
+  }
+  .particle{
+    position:absolute;border-radius:50%;
+    background:radial-gradient(circle, var(--gold-soft), transparent);
+    opacity:0;animation:floatParticle linear infinite;
+  }
+
+  @keyframes floatParticle{
+    0%{opacity:0;transform:translateY(100vh) scale(0);}
+    10%{opacity:.35;}
+    90%{opacity:.15;}
+    100%{opacity:0;transform:translateY(-20vh) scale(1);}
+  }
+
   h1,h2,h3{
     font-family:'Fraunces', serif;
-    margin:0 0 .4em 0;
     color:var(--pine);
     font-weight:600;
   }
-  a{color:var(--pine-soft);}
-  .wrap{max-width:920px;margin:0 auto;padding:28px 20px 80px;}
+  a{color:var(--pine-soft);text-decoration:none;transition:color .2s;}
+  a:hover{color:var(--gold);}
 
-  /* reveal-on-load / reveal-on-scroll */
-  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease, transform .6s ease;}
+  .wrap{max-width:920px;margin:0 auto;padding:32px 20px 100px;position:relative;z-index:1;}
+
+  /* ── Reveal animasi ── */
+  .reveal{
+    opacity:0;transform:translateY(22px);
+    transition:opacity .65s cubic-bezier(.16,1,.3,1), transform .65s cubic-bezier(.16,1,.3,1);
+  }
   .reveal.is-visible{opacity:1;transform:translateY(0);}
 
-  /* header */
+  /* ── Header ── */
   .top{
     display:flex;justify-content:space-between;align-items:center;
-    padding:6px 0 20px;border-bottom:1px solid var(--line);margin-bottom:28px;
+    padding:8px 0 22px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:32px;
+    position:sticky;top:0;z-index:100;
+    background:rgba(245,240,232,.92);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    margin-left:-20px;margin-right:-20px;
+    padding-left:20px;padding-right:20px;
   }
-  .top .brand{font-family:'Fraunces',serif;font-weight:600;font-size:1.05rem;color:var(--pine);display:flex;align-items:center;gap:8px;}
+  .top .brand{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.08rem;
+    color:var(--pine);display:flex;align-items:center;gap:9px;
+  }
   .top .brand span{color:var(--gold);}
   .brand-mark{
-    width:22px;height:22px;flex-shrink:0;color:var(--pine);
-    animation:sway 4.5s ease-in-out infinite;
+    width:24px;height:24px;flex-shrink:0;color:var(--pine);
+    animation:sway 5s ease-in-out infinite;
     transform-origin:50% 90%;
+    filter:drop-shadow(0 2px 6px var(--pine-glow));
   }
   @keyframes sway{
-    0%,100%{transform:rotate(-4deg);}
-    50%{transform:rotate(4deg);}
+    0%,100%{transform:rotate(-5deg);}
+    50%{transform:rotate(5deg);}
   }
+
   #adminBtn{
-    background:none;border:1px solid var(--line);color:var(--ink-muted);
-    padding:7px 14px;border-radius:20px;font-family:'Work Sans';font-size:.82rem;
-    cursor:pointer;transition:.15s;
-  }
-  #adminBtn:hover{border-color:var(--gold);color:var(--pine);transform:translateY(-1px);}
-  #adminBtn.on{background:var(--pine);color:#fff;border-color:var(--pine);}
-
-  /* setup banner */
-  .setup{
-    background:#FBF6E9;border:1px solid var(--gold-soft);border-radius:10px;
-    padding:18px 20px;margin-bottom:26px;font-size:.92rem;
-  }
-  .setup code{background:var(--paper-dim);padding:2px 6px;border-radius:5px;font-size:.85em;}
-  .setup button{margin-top:10px;}
-
-  /* identity card */
-  .id-card{
-    background:var(--card);border:1px solid var(--line);border-radius:14px;
-    padding:26px;display:flex;gap:22px;align-items:flex-start;margin-bottom:22px;
+    background:none;border:1.5px solid var(--line);color:var(--ink-muted);
+    padding:7px 16px;border-radius:99px;font-family:'Work Sans';font-size:.82rem;
+    cursor:pointer;transition:all .2s cubic-bezier(.34,1.56,.64,1);
     position:relative;overflow:hidden;
-    box-shadow:0 1px 2px rgba(38,36,29,.03);
-    transition:box-shadow .25s ease;
   }
-  .id-card:hover{box-shadow:0 10px 24px rgba(38,36,29,.07);}
+  #adminBtn::before{
+    content:'';position:absolute;inset:0;background:var(--pine);
+    transform:scaleX(0);transform-origin:left;transition:transform .25s ease;
+    border-radius:99px;z-index:0;
+  }
+  #adminBtn span{position:relative;z-index:1;}
+  #adminBtn:hover{border-color:var(--gold);color:var(--pine);transform:translateY(-2px);box-shadow:0 4px 14px var(--gold-glow);}
+  #adminBtn.on{background:var(--pine);color:#fff;border-color:var(--pine);box-shadow:0 4px 14px var(--pine-glow);}
+
+  /* ── Setup banner ── */
+  .setup{
+    background:linear-gradient(135deg,#FFFBF0,#FFF6DC);
+    border:1px solid var(--gold-soft);border-radius:14px;
+    padding:18px 22px;margin-bottom:28px;font-size:.92rem;
+    box-shadow:0 2px 12px var(--gold-glow);
+  }
+  .setup code{background:var(--paper-dim);padding:2px 7px;border-radius:5px;font-size:.84em;font-weight:600;}
+
+  /* ── Identity card ── */
+  .id-card{
+    background:var(--card);border:1px solid var(--line);border-radius:20px;
+    padding:28px;display:flex;gap:24px;align-items:flex-start;margin-bottom:24px;
+    position:relative;overflow:hidden;
+    box-shadow:0 2px 8px rgba(38,36,29,.04);
+    transition:box-shadow .3s ease, transform .3s ease;
+  }
+  .id-card:hover{box-shadow:0 16px 40px rgba(38,36,29,.09);transform:translateY(-3px);}
   .id-card::before{
-    content:"";position:absolute;left:0;top:0;bottom:0;width:6px;
+    content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
     background:linear-gradient(180deg,var(--gold),var(--pine));
+    border-radius:4px 0 0 4px;
   }
+  /* shimmer efek di card */
+  .id-card::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.5) 50%,transparent 60%);
+    background-size:200% 100%;
+    animation:shimmer 4s ease infinite;
+    pointer-events:none;
+  }
+  @keyframes shimmer{
+    0%{background-position:200% 0;}
+    100%{background-position:-200% 0;}
+  }
+
   .avatar{
-    width:76px;height:76px;border-radius:50%;background:var(--pine);color:#fff;
+    width:82px;height:82px;border-radius:50%;background:var(--pine);color:#fff;
     display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;
-    font-size:1.5rem;flex-shrink:0;overflow:hidden;
+    font-size:1.55rem;flex-shrink:0;overflow:hidden;
     border:3px solid var(--paper);
-    box-shadow:0 0 0 2px var(--gold-soft);
+    box-shadow:0 0 0 3px var(--gold-soft), 0 4px 16px var(--pine-glow);
     background-size:cover;background-position:center;
+    transition:transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
   }
-  .id-info h1{font-size:1.4rem;margin-bottom:2px;}
-  .id-meta{color:var(--ink-muted);font-size:.92rem;}
-  .id-meta div{margin-top:2px;}
+  .id-card:hover .avatar{transform:scale(1.07);box-shadow:0 0 0 3px var(--gold), 0 8px 24px var(--pine-glow);}
+
+  .id-info h1{font-size:1.45rem;margin-bottom:3px;letter-spacing:-.01em;}
+  .id-meta{color:var(--ink-muted);font-size:.91rem;}
+  .id-meta div{margin-top:3px;}
   .id-badge{
     display:inline-flex;align-items:center;gap:5px;
-    margin-top:10px;padding:3px 10px;border-radius:20px;
-    background:var(--paper-dim);color:var(--pine-soft);
-    font-size:.76rem;font-weight:600;letter-spacing:.02em;
+    margin-top:12px;padding:4px 12px;border-radius:99px;
+    background:linear-gradient(135deg,rgba(30,58,52,.08),rgba(30,58,52,.04));
+    color:var(--pine-soft);border:1px solid rgba(30,58,52,.12);
+    font-size:.75rem;font-weight:600;letter-spacing:.04em;
+    animation:pulseBadge 3s ease infinite;
   }
-  .id-badge svg{width:12px;height:12px;}
+  @keyframes pulseBadge{
+    0%,100%{box-shadow:0 0 0 0 rgba(30,58,52,.15);}
+    50%{box-shadow:0 0 0 5px rgba(30,58,52,0);}
+  }
+  .id-badge svg{width:11px;height:11px;}
 
-  /* generic card/section */
+  /* ── Card generik ── */
   .card{
-    background:var(--card);border:1px solid var(--line);border-radius:14px;
-    padding:24px 26px;margin-bottom:22px;
-    transition:box-shadow .25s ease, transform .25s ease;
+    background:var(--card);border:1px solid var(--line);border-radius:20px;
+    padding:26px 28px;margin-bottom:24px;
+    transition:box-shadow .3s ease, transform .3s ease;
+    position:relative;overflow:hidden;
   }
-  .card:hover{box-shadow:0 8px 20px rgba(38,36,29,.06);}
-  .card h2{font-size:1.15rem;display:flex;align-items:center;gap:8px;}
+  .card:hover{box-shadow:0 10px 30px rgba(38,36,29,.07);transform:translateY(-2px);}
+  .card h2{font-size:1.1rem;display:flex;align-items:center;gap:9px;margin-bottom:.6em;}
   .card h2 svg{width:18px;height:18px;color:var(--gold);flex-shrink:0;}
   .eyebrow-none{margin-top:0;}
   .edit-link{
     background:none;border:none;color:var(--gold);cursor:pointer;font-size:.82rem;
-    text-decoration:underline;padding:0;
+    text-decoration:none;padding:3px 8px;border-radius:6px;
+    transition:background .15s, color .15s;display:inline-block;margin-top:6px;
   }
-  label{display:block;font-size:.8rem;color:var(--ink-muted);margin:12px 0 4px;}
-  input[type=text], input[type=url], input[type=date], textarea{
-    width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;
-    font-family:'Work Sans';font-size:.94rem;background:var(--paper);color:var(--ink);
-    transition:border-color .15s ease, box-shadow .15s ease;
-  }
-  textarea{resize:vertical;min-height:70px;}
-  input:focus, textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,134,43,.14);}
-  .btn{
-    background:var(--pine);color:#fff;border:none;padding:9px 18px;border-radius:8px;
-    font-family:'Work Sans';font-size:.9rem;cursor:pointer;transition:.15s;
-  }
-  .btn:hover{background:var(--pine-soft);transform:translateY(-1px);}
-  .btn.secondary{background:none;border:1px solid var(--line);color:var(--ink-muted);}
-  .btn.secondary:hover{border-color:var(--pine);color:var(--pine);}
-  .btn.danger{background:none;border:1px solid var(--danger);color:var(--danger);padding:5px 12px;font-size:.78rem;}
-  .btn.danger:hover{background:var(--danger);color:#fff;}
+  .edit-link:hover{background:var(--gold-glow);color:var(--pine);}
 
-  /* progress strip */
-  .progress-strip{
-    display:flex;align-items:center;gap:12px;margin-top:14px;
+  /* ── Form ── */
+  label{display:block;font-size:.79rem;color:var(--ink-muted);margin:14px 0 4px;font-weight:500;letter-spacing:.02em;}
+  input[type=text],input[type=url],input[type=date],input[type=password],textarea{
+    width:100%;padding:10px 13px;border:1.5px solid var(--line);border-radius:10px;
+    font-family:'Work Sans';font-size:.93rem;background:var(--paper);color:var(--ink);
+    transition:border-color .2s ease, box-shadow .2s ease, background .2s;
   }
+  textarea{resize:vertical;min-height:76px;}
+  input:focus,textarea:focus{
+    outline:none;border-color:var(--gold);
+    box-shadow:0 0 0 4px var(--gold-glow);
+    background:#fff;
+  }
+
+  /* ── Tombol ── */
+  .btn{
+    background:var(--pine);color:#fff;border:none;
+    padding:10px 20px;border-radius:10px;
+    font-family:'Work Sans';font-size:.9rem;font-weight:500;
+    cursor:pointer;
+    transition:all .2s cubic-bezier(.34,1.56,.64,1);
+    position:relative;overflow:hidden;
+  }
+  .btn::after{
+    content:'';position:absolute;inset:0;
+    background:rgba(255,255,255,.12);
+    transform:scaleX(0);transform-origin:left;
+    transition:transform .2s ease;
+  }
+  .btn:hover{background:var(--pine-soft);transform:translateY(-2px);box-shadow:0 6px 18px var(--pine-glow);}
+  .btn:hover::after{transform:scaleX(1);}
+  .btn:active{transform:translateY(0) scale(.97);}
+  .btn.secondary{
+    background:none;border:1.5px solid var(--line);color:var(--ink-muted);
+  }
+  .btn.secondary:hover{border-color:var(--pine);color:var(--pine);box-shadow:none;background:rgba(26,56,48,.04);}
+  .btn.danger{
+    background:none;border:1.5px solid var(--danger);color:var(--danger);
+    padding:6px 13px;font-size:.78rem;
+  }
+  .btn.danger:hover{background:var(--danger);color:#fff;box-shadow:0 4px 12px var(--danger-soft);}
+
+  /* ── Progress strip ── */
+  .progress-strip{display:flex;align-items:center;gap:14px;margin-top:16px;}
   .progress-track{
-    flex:1;height:6px;border-radius:4px;background:var(--paper-dim);overflow:hidden;
+    flex:1;height:8px;border-radius:99px;
+    background:var(--paper-dim);overflow:hidden;
+    box-shadow:inset 0 1px 3px rgba(0,0,0,.06);
   }
   .progress-fill{
-    height:100%;border-radius:4px;
-    background:linear-gradient(90deg,var(--gold),var(--pine-soft));
-    width:0%;transition:width 1s cubic-bezier(.4,0,.2,1);
+    height:100%;border-radius:99px;
+    background:linear-gradient(90deg,var(--gold),var(--pine-soft),var(--gold));
+    background-size:200% 100%;
+    width:0%;
+    transition:width 1.2s cubic-bezier(.16,1,.3,1);
+    animation:shimmerBar 2.5s linear infinite;
+  }
+  @keyframes shimmerBar{
+    0%{background-position:100% 0;}
+    100%{background-position:-100% 0;}
   }
   .progress-count{font-size:.82rem;color:var(--ink-muted);white-space:nowrap;}
-  .progress-count strong{color:var(--pine);font-family:'Fraunces',serif;}
+  .progress-count strong{color:var(--pine);font-family:'Fraunces',serif;font-size:1rem;}
 
-  /* task list */
+  /* ── Task card ── */
   .task{
-    border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-top:12px;
+    border:1.5px solid var(--line);border-radius:14px;
+    padding:16px 18px;margin-top:14px;
     display:flex;justify-content:space-between;gap:14px;align-items:flex-start;
-    transition:border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+    transition:all .3s cubic-bezier(.16,1,.3,1);
+    background:var(--card);
+    animation:taskIn .45s cubic-bezier(.16,1,.3,1) both;
   }
-  .task:hover{border-color:var(--gold-soft);transform:translateY(-2px);box-shadow:0 6px 16px rgba(38,36,29,.06);}
-  .task h3{font-size:1rem;margin-bottom:3px;}
-  .task .meta{font-size:.8rem;color:var(--ink-muted);margin-bottom:6px;}
-  .task p{margin:0 0 6px;font-size:.9rem;}
-  .task a.file{font-size:.85rem;font-weight:600;}
-  .task a.file::after{content:"";}
+  @keyframes taskIn{
+    from{opacity:0;transform:translateY(16px) scale(.98);}
+    to{opacity:1;transform:none;}
+  }
+  .task:hover{
+    border-color:var(--gold-soft);
+    transform:translateY(-3px);
+    box-shadow:0 8px 24px rgba(38,36,29,.08);
+    background:linear-gradient(135deg,#fff,#FFFDF8);
+  }
+  .task h3{font-size:1rem;margin-bottom:4px;transition:color .2s;}
+  .task:hover h3{color:var(--pine);}
+  .task .meta{font-size:.79rem;color:var(--ink-muted);margin-bottom:7px;display:flex;align-items:center;gap:6px;}
+  .task .meta::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold-soft);flex-shrink:0;}
+  .task p{margin:0 0 7px;font-size:.9rem;color:var(--ink-muted);}
+  .task a.file{
+    font-size:.84rem;font-weight:600;color:var(--pine-soft);
+    display:inline-flex;align-items:center;gap:5px;
+    padding:4px 10px;border-radius:7px;background:rgba(26,56,48,.06);
+    transition:background .2s, color .2s;
+  }
+  .task a.file:hover{background:rgba(26,56,48,.12);color:var(--pine);}
   .task .actions{display:flex;gap:6px;flex-shrink:0;}
-  .empty{color:var(--ink-muted);font-size:.9rem;font-style:italic;}
+  .empty{color:var(--ink-muted);font-size:.9rem;font-style:italic;padding:20px 0;text-align:center;}
 
-  footer{text-align:center;color:var(--ink-muted);font-size:.8rem;margin-top:40px;}
+  /* ── Nomor urut task ── */
+  .task-num{
+    min-width:28px;height:28px;border-radius:50%;
+    background:linear-gradient(135deg,var(--gold),var(--pine-soft));
+    color:#fff;font-size:.74rem;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;margin-top:2px;
+    box-shadow:0 2px 8px var(--gold-glow);
+  }
+
+  /* ── Toast notifikasi ── */
+  #toast{
+    position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--pine);color:#fff;padding:11px 22px;border-radius:99px;
+    font-size:.88rem;font-weight:500;z-index:9999;pointer-events:none;
+    opacity:0;transition:opacity .3s, transform .3s;
+    box-shadow:0 6px 24px var(--pine-glow);
+    display:flex;align-items:center;gap:8px;white-space:nowrap;
+  }
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* ── Footer ── */
+  footer{
+    text-align:center;color:var(--ink-muted);font-size:.8rem;margin-top:48px;
+    padding-top:24px;border-top:1px solid var(--line);
+  }
   footer .quill{width:14px;height:14px;vertical-align:-2px;margin-right:4px;color:var(--gold);}
 
+  /* ── Responsive ── */
   @media (max-width:560px){
     .id-card{flex-direction:column;align-items:flex-start;}
     .task{flex-direction:column;}
+    .top{padding-top:12px;}
   }
+
+  /* ===== MODAL ===== */
+  .modal-overlay{
+    display:none;position:fixed;inset:0;
+    background:rgba(22,20,16,.5);
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    z-index:1000;align-items:center;justify-content:center;padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    background:var(--card);border-radius:20px;padding:34px 30px;width:100%;max-width:480px;
+    box-shadow:0 28px 80px rgba(22,20,16,.22);position:relative;
+    animation:modalIn .28s cubic-bezier(.34,1.56,.64,1);
+    border:1px solid var(--line);
+  }
+  @keyframes modalIn{
+    from{opacity:0;transform:translateY(24px) scale(.95);}
+    to{opacity:1;transform:none;}
+  }
+  .modal-box h2{font-size:1.25rem;margin-bottom:6px;color:var(--pine);}
+  .modal-box .modal-sub{font-size:.86rem;color:var(--ink-muted);margin-bottom:20px;}
+  .modal-close{
+    position:absolute;top:16px;right:18px;background:var(--paper-dim);border:none;
+    width:30px;height:30px;border-radius:50%;
+    font-size:1.1rem;cursor:pointer;color:var(--ink-muted);
+    display:flex;align-items:center;justify-content:center;
+    transition:background .15s, color .15s;
+  }
+  .modal-close:hover{background:var(--line);color:var(--ink);}
+  .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}
+  .modal-grid .full{grid-column:1/-1;}
+  .modal-actions{display:flex;gap:10px;margin-top:22px;justify-content:flex-end;}
 </style>
 </head>
 <body>
+<canvas id="particles" aria-hidden="true"></canvas>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<!-- Modal Password Admin -->
+<div class="modal-overlay" id="modalPassword">
+  <div class="modal-box" style="max-width:360px;">
+    <button class="modal-close" onclick="closePasswordModal()">×</button>
+    <h2>Masuk sebagai Admin</h2>
+    <label>Kata sandi</label>
+    <input type="password" id="modalPwInput" placeholder="Masukkan kata sandi..." onkeydown="if(event.key==='Enter')submitPassword()">
+    <div id="modalPwError" style="color:var(--danger);font-size:.82rem;margin-top:6px;display:none;">Kata sandi salah.</div>
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closePasswordModal()">Batal</button>
+      <button class="btn" onclick="submitPassword()">Masuk</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Edit Profil -->
+<div class="modal-overlay" id="modalProfile">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeProfileModal()">×</button>
+    <h2>Edit Profil & Mata Kuliah</h2>
+    <div class="modal-grid">
+      <div class="full">
+        <label>Nama lengkap</label>
+        <input type="text" id="mName" placeholder="Nama lengkap">
+      </div>
+      <div>
+        <label>NIM</label>
+        <input type="text" id="mNim" placeholder="NIM">
+      </div>
+      <div>
+        <label>Program studi</label>
+        <input type="text" id="mProdi" placeholder="Program studi">
+      </div>
+      <div class="full">
+        <label>Nama kampus</label>
+        <input type="text" id="mKampus" placeholder="Nama kampus (opsional)">
+      </div>
+      <div class="full">
+        <label>Deskripsi singkat</label>
+        <textarea id="mBio" placeholder="Tentang kamu..."></textarea>
+      </div>
+      <div>
+        <label>Mata kuliah</label>
+        <input type="text" id="mMatkul" placeholder="Nama mata kuliah">
+      </div>
+      <div>
+        <label>Dosen pengampu</label>
+        <input type="text" id="mDosen" placeholder="Nama dosen">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closeProfileModal()">Batal</button>
+      <button class="btn" onclick="saveProfileModal()">Simpan</button>
+    </div>
+  </div>
+</div>
+
 <div class="wrap">
 
   <div class="top reveal">
@@ -187,7 +434,7 @@
       <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l10-6 10 6-10 6-10-6z"/><path d="M6 14v5c0 1 3 3 6 3s6-2 6-3v-5"/><path d="M22 12v6"/></svg>
       Ruang Tugas <span>·</span> Belajar & Pembelajaran
     </div>
-    <button id="adminBtn" onclick="toggleAdmin()">Masuk sebagai admin</button>
+    <button id="adminBtn" onclick="toggleAdmin()"><span></span>Masuk sebagai admin</span></button>
   </div>
 
   <div id="setupBanner" class="setup" style="display:none;">
@@ -402,7 +649,75 @@ function copyBlobId(){
     .catch(() => prompt('Salin ID ini:', BIN_ID));
 }
 
-function initials(name){
+/* ====== ANIMASI PARTIKEL BACKGROUND ====== */
+(function initParticles(){
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize(){
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function randomBetween(a,b){ return a + Math.random()*(b-a); }
+
+  function createParticle(){
+    return {
+      x: randomBetween(0, W),
+      y: randomBetween(H*0.3, H),
+      size: randomBetween(3, 9),
+      speedY: randomBetween(0.3, 0.9),
+      speedX: randomBetween(-0.2, 0.2),
+      opacity: 0,
+      maxOpacity: randomBetween(0.06, 0.18),
+      life: 0,
+      maxLife: randomBetween(200, 500)
+    };
+  }
+
+  for(let i=0;i<28;i++) particles.push(createParticle());
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach((p,i) => {
+      p.life++;
+      p.y -= p.speedY;
+      p.x += p.speedX;
+      const progress = p.life / p.maxLife;
+      p.opacity = progress < 0.1
+        ? (progress/0.1)*p.maxOpacity
+        : progress > 0.8
+          ? ((1-progress)/0.2)*p.maxOpacity
+          : p.maxOpacity;
+
+      const grad = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.size);
+      grad.addColorStop(0, `rgba(196,154,46,${p.opacity})`);
+      grad.addColorStop(1, 'transparent');
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      if(p.life >= p.maxLife || p.y < -20) particles[i] = createParticle();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ====== TOAST NOTIFIKASI ====== */
+function showToast(msg, icon='✓'){
+  const el = document.getElementById('toast');
+  el.innerHTML = `<span>${icon}</span> ${msg}`;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+
   const parts = name.trim().split(/\s+/).filter(Boolean);
   if (parts.length === 0) return '?';
   return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
@@ -480,41 +795,78 @@ function escapeAttr(s){ return escapeHtml(s); }
 function toggleAdmin(){
   if (isAdmin){
     isAdmin = false;
-    document.getElementById('adminBtn').textContent = 'Masuk sebagai admin';
+    document.querySelector('#adminBtn span').textContent = 'Masuk sebagai admin';
     document.getElementById('adminBtn').classList.remove('on');
     hideSetupBanner();
+    document.getElementById('formCard').style.display = 'none';
+    document.getElementById('editProfileBtn').style.display = 'none';
+    document.getElementById('editBioBtn').style.display = 'none';
+    document.getElementById('editMkBtn').style.display = 'none';
+    render();
+    showToast('Keluar dari mode admin', '👋');
   } else {
-    const pw = prompt('Masukkan kata sandi admin:');
-    if (pw === null) return;
-    if (pw === ADMIN_PASSWORD){
-      isAdmin = true;
-      document.getElementById('adminBtn').textContent = 'Keluar dari mode admin';
-      document.getElementById('adminBtn').classList.add('on');
-      /* Tampilkan info penyimpanan */
-      showAdminStorageBanner();    } else {
-      alert('Kata sandi salah.');
-      return;
-    }
+    document.getElementById('modalPwInput').value = '';
+    document.getElementById('modalPwError').style.display = 'none';
+    document.getElementById('modalPassword').classList.add('open');
+    setTimeout(() => document.getElementById('modalPwInput').focus(), 50);
   }
-  document.getElementById('formCard').style.display = isAdmin ? 'block' : 'none';
-  document.getElementById('editProfileBtn').style.display = isAdmin ? 'inline' : 'none';
-  document.getElementById('editBioBtn').style.display = isAdmin ? 'inline' : 'none';
-  document.getElementById('editMkBtn').style.display = isAdmin ? 'inline' : 'none';
-  render();
+}
+
+function submitPassword(){
+  const pw = document.getElementById('modalPwInput').value;
+  if (pw === ADMIN_PASSWORD){
+    closePasswordModal();
+    isAdmin = true;
+    document.querySelector('#adminBtn span').textContent = 'Keluar dari mode admin';
+    document.getElementById('adminBtn').classList.add('on');
+    showAdminStorageBanner();
+    document.getElementById('formCard').style.display = 'block';
+    document.getElementById('editProfileBtn').style.display = 'inline';
+    document.getElementById('editBioBtn').style.display = 'inline';
+    document.getElementById('editMkBtn').style.display = 'inline';
+    render();
+    showToast('Mode admin aktif', '🔑');
+  } else {
+    document.getElementById('modalPwError').style.display = 'block';
+    document.getElementById('modalPwInput').select();
+  }
+}
+
+function closePasswordModal(){
+  document.getElementById('modalPassword').classList.remove('open');
 }
 
 function openProfileEditor(){
   const p = state.profile;
-  const name = prompt('Nama lengkap:', p.name); if (name === null) return;
-  const nim = prompt('NIM:', p.nim); if (nim === null) return;
-  const prodi = prompt('Program studi:', p.prodi); if (prodi === null) return;
-  const kampus = prompt('Nama kampus (opsional):', p.kampus); if (kampus === null) return;
-  const bio = prompt('Deskripsi singkat tentang kamu:', p.bio); if (bio === null) return;
-  const matkul = prompt('Nama mata kuliah:', p.matkul); if (matkul === null) return;
-  const dosen = prompt('Nama dosen pengampu:', p.dosen); if (dosen === null) return;
-  state.profile = {name, nim, prodi, kampus, bio, matkul, dosen, photo: p.photo};
+  document.getElementById('mName').value   = p.name   || '';
+  document.getElementById('mNim').value    = p.nim    || '';
+  document.getElementById('mProdi').value  = p.prodi  || '';
+  document.getElementById('mKampus').value = p.kampus || '';
+  document.getElementById('mBio').value    = p.bio    || '';
+  document.getElementById('mMatkul').value = p.matkul || '';
+  document.getElementById('mDosen').value  = p.dosen  || '';
+  document.getElementById('modalProfile').classList.add('open');
+}
+
+function saveProfileModal(){
+  const p = state.profile;
+  state.profile = {
+    name:   document.getElementById('mName').value.trim(),
+    nim:    document.getElementById('mNim').value.trim(),
+    prodi:  document.getElementById('mProdi').value.trim(),
+    kampus: document.getElementById('mKampus').value.trim(),
+    bio:    document.getElementById('mBio').value.trim(),
+    matkul: document.getElementById('mMatkul').value.trim(),
+    dosen:  document.getElementById('mDosen').value.trim(),
+    photo:  p.photo
+  };
+  closeProfileModal();
   render();
   saveData();
+  showToast('Profil berhasil disimpan', '✓');
+
+function closeProfileModal(){
+  document.getElementById('modalProfile').classList.remove('open');
 }
 
 async function submitTask(e){
