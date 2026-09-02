@@ -333,6 +333,28 @@
     .top{padding-top:12px;}
   }
 
+  /* ── Ripple & Konfeti keyframes ── */
+  @keyframes rippleAnim{
+    to{transform:scale(2.5);opacity:0;}
+  }
+  @keyframes confettiFall{
+    0%{transform:translateY(0) rotate(0deg);opacity:1;}
+    100%{transform:translateY(100vh) rotate(720deg);opacity:0;}
+  }
+
+  /* ── Cursor dot ── */
+  #cursor-dot{
+    width:8px;height:8px;background:var(--gold);border-radius:50%;
+    position:fixed;pointer-events:none;z-index:99999;
+    transition:transform .1s ease;
+    mix-blend-mode:multiply;
+  }
+  #cursor-ring{
+    width:32px;height:32px;border:1.5px solid var(--gold-soft);border-radius:50%;
+    position:fixed;pointer-events:none;z-index:99998;
+    transition:left .12s ease, top .12s ease, transform .2s ease;
+  }
+
   /* ===== MODAL ===== */
   .modal-overlay{
     display:none;position:fixed;inset:0;
@@ -369,6 +391,8 @@
 <body>
 <canvas id="particles" aria-hidden="true"></canvas>
 <div id="toast" role="status" aria-live="polite"></div>
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
 
 <!-- Modal Password Admin -->
 <div class="modal-overlay" id="modalPassword">
@@ -749,13 +773,17 @@ function render(){
   if (tasks.length === 0){
     list.innerHTML = '<p class="empty">Belum ada tugas yang dikumpulkan.</p>';
   } else {
-    list.innerHTML = tasks.map(t => `
-      <div class="task reveal is-visible">
-        <div>
+    list.innerHTML = tasks.map((t, i) => `
+      <div class="task reveal is-visible" style="animation-delay:${i*60}ms">
+        <div class="task-num">${tasks.length - i}</div>
+        <div style="flex:1;">
           <h3>${escapeHtml(t.judul)}</h3>
           <div class="meta">${escapeHtml(t.pertemuan || '')}${t.pertemuan ? ' · ' : ''}${formatDate(t.tanggal)}</div>
           ${t.deskripsi ? `<p>${escapeHtml(t.deskripsi)}</p>` : ''}
-          ${t.link ? `<a class="file" href="${escapeAttr(t.link)}" target="_blank" rel="noopener">Buka file tugas →</a>` : ''}
+          ${t.link ? `<a class="file" href="${escapeAttr(t.link)}" target="_blank" rel="noopener">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Buka file tugas
+          </a>` : ''}
         </div>
         ${isAdmin ? `<div class="actions"><button class="btn danger" onclick="deleteTask('${t.id}')">Hapus</button></div>` : ''}
       </div>
@@ -864,6 +892,7 @@ function saveProfileModal(){
   render();
   saveData();
   showToast('Profil berhasil disimpan', '✓');
+}
 
 function closeProfileModal(){
   document.getElementById('modalProfile').classList.remove('open');
@@ -882,6 +911,8 @@ async function submitTask(e){
   state.tasks.push(task);
   render();
   e.target.reset();
+  launchConfetti();
+  showToast('Tugas berhasil dikumpulkan', '📚');
   await saveData();
 }
 
@@ -889,7 +920,50 @@ async function deleteTask(id){
   if (!confirm('Hapus tugas ini?')) return;
   state.tasks = state.tasks.filter(t => t.id !== id);
   render();
+  showToast('Tugas dihapus', '🗑️');
   await saveData();
+}
+
+/* ====== RIPPLE EFFECT pada semua .btn ====== */
+document.addEventListener('click', function(e){
+  const btn = e.target.closest('.btn');
+  if(!btn) return;
+  const circle = document.createElement('span');
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  circle.style.cssText = `
+    position:absolute;border-radius:50%;
+    width:${size}px;height:${size}px;
+    left:${e.clientX - rect.left - size/2}px;
+    top:${e.clientY - rect.top - size/2}px;
+    background:rgba(255,255,255,.3);
+    transform:scale(0);pointer-events:none;
+    animation:rippleAnim .5s ease-out forwards;
+  `;
+  btn.style.position = 'relative';
+  btn.style.overflow = 'hidden';
+  btn.appendChild(circle);
+  setTimeout(() => circle.remove(), 550);
+});
+
+/* ====== KONFETI saat tugas berhasil dikumpulkan ====== */
+function launchConfetti(){
+  const colors = ['#C49A2E','#1A3830','#E2C97E','#254D42','#fff'];
+  const count = 60;
+  for(let i = 0; i < count; i++){
+    const el = document.createElement('div');
+    const size = Math.random()*8+4;
+    el.style.cssText = `
+      position:fixed;pointer-events:none;z-index:9998;
+      width:${size}px;height:${size * (Math.random()*1.5+0.5)}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      border-radius:${Math.random()>0.5?'50%':'2px'};
+      left:${Math.random()*100}vw;top:-10px;
+      animation:confettiFall ${1.2+Math.random()*1.2}s cubic-bezier(.25,.46,.45,.94) ${Math.random()*0.4}s forwards;
+    `;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2600);
+  }
 }
 
 /* animasi tipis: elemen muncul perlahan saat halaman dimuat / saat discroll ke tampilan */
@@ -908,6 +982,34 @@ function setupReveal(){
   });
 }
 setupReveal();
+
+/* ====== CUSTOM CURSOR ====== */
+(function initCursor(){
+  const dot  = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  if(!dot || !ring) return;
+  let mx=0, my=0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left  = (mx - 4)  + 'px';
+    dot.style.top   = (my - 4)  + 'px';
+    ring.style.left = (mx - 16) + 'px';
+    ring.style.top  = (my - 16) + 'px';
+  });
+  document.addEventListener('mousedown', () => {
+    dot.style.transform  = 'scale(1.8)';
+    ring.style.transform = 'scale(.7)';
+  });
+  document.addEventListener('mouseup', () => {
+    dot.style.transform  = '';
+    ring.style.transform = '';
+  });
+  /* Sembunyikan di mobile */
+  if('ontouchstart' in window){
+    dot.style.display = 'none';
+    ring.style.display = 'none';
+  }
+})();
 
 loadData();
 </script>
