@@ -459,8 +459,15 @@
   #modalTask .task-content-full h3{color:var(--gold) !important;font-size:1rem;margin:.4em 0 .2em;}
   #modalTask .task-content-full ul,
   #modalTask .task-content-full ol{padding-left:1.4em;margin:.3em 0;}
-  #modalTask .task-meta-row{
-    display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;
+  #modalEditTask .modal-box{
+    display:flex;flex-direction:column;max-height:90vh;overflow:hidden;
+  }
+  #modalEditTask .modal-body{
+    flex:1;overflow-y:auto;padding-right:4px;
+  }
+  #modalEditTask .modal-actions{
+    flex-shrink:0;padding-top:16px;margin-top:0;
+    border-top:1px solid var(--line);
   }
   #modalTask .task-chip{
     display:inline-flex;align-items:center;gap:5px;
@@ -582,33 +589,41 @@
 <div class="modal-overlay" id="modalEditTask">
   <div class="modal-box">
     <button class="modal-close" onclick="closeEditTaskModal()">×</button>
-    <h2>Edit Tugas</h2>
+    <h2 style="margin-bottom:16px;">Edit Tugas</h2>
     <input type="hidden" id="editTaskId">
-    <label>Judul tugas</label>
-    <input type="text" id="editJudul" placeholder="Judul tugas">
-    <label>Pertemuan / minggu ke</label>
-    <input type="text" id="editPertemuan" placeholder="Misal: Pertemuan 6">
-    <label>Jam pengumpulan</label>
-    <input type="time" id="editJam">
-    <label>Tanggal dikumpulkan</label>
-    <input type="date" id="editTanggal">
-    <label>Isi / konten tugas</label>
-    <div class="rte-wrap">
-      <div class="rte-toolbar" id="rteEditToolbar">
-        <button type="button" class="rte-btn" data-cmd="bold"><b>B</b></button>
-        <button type="button" class="rte-btn" data-cmd="italic"><i>I</i></button>
-        <button type="button" class="rte-btn" data-cmd="underline"><u>U</u></button>
-        <div class="rte-sep"></div>
-        <button type="button" class="rte-btn" data-cmd="insertUnorderedList">☰</button>
-        <button type="button" class="rte-btn" data-cmd="insertOrderedList">1.</button>
-        <div class="rte-sep"></div>
-        <button type="button" class="rte-btn" data-cmd="removeFormat">✕</button>
+    <div class="modal-body">
+      <label>Judul tugas</label>
+      <input type="text" id="editJudul" placeholder="Judul tugas">
+      <label>Pertemuan / minggu ke</label>
+      <input type="text" id="editPertemuan" placeholder="Misal: Pertemuan 6">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px;">
+        <div>
+          <label>Jam pengumpulan</label>
+          <input type="time" id="editJam">
+        </div>
+        <div>
+          <label>Tanggal dikumpulkan</label>
+          <input type="date" id="editTanggal">
+        </div>
       </div>
-      <div class="rte-editor" id="rteEditEditor" contenteditable="true" spellcheck="false"
-        data-placeholder="Edit isi tugas..."></div>
+      <label>Isi / konten tugas</label>
+      <div class="rte-wrap">
+        <div class="rte-toolbar" id="rteEditToolbar">
+          <button type="button" class="rte-btn" data-cmd="bold"><b>B</b></button>
+          <button type="button" class="rte-btn" data-cmd="italic"><i>I</i></button>
+          <button type="button" class="rte-btn" data-cmd="underline"><u>U</u></button>
+          <div class="rte-sep"></div>
+          <button type="button" class="rte-btn" data-cmd="insertUnorderedList">☰</button>
+          <button type="button" class="rte-btn" data-cmd="insertOrderedList">1.</button>
+          <div class="rte-sep"></div>
+          <button type="button" class="rte-btn" data-cmd="removeFormat">✕</button>
+        </div>
+        <div class="rte-editor" id="rteEditEditor" contenteditable="true" spellcheck="false"
+          data-placeholder="Edit isi tugas..." style="min-height:140px;max-height:260px;"></div>
+      </div>
+      <label>Link file pendukung (opsional)</label>
+      <input type="url" id="editLink" placeholder="https://drive.google.com/...">
     </div>
-    <label>Link file pendukung (opsional)</label>
-    <input type="url" id="editLink" placeholder="https://drive.google.com/...">
     <div class="modal-actions">
       <button class="btn secondary" onclick="closeEditTaskModal()">Batal</button>
       <button class="btn" onclick="saveEditTask()">Simpan perubahan</button>
