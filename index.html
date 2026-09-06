@@ -8,20 +8,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#0D0B14;
-    --paper-dim:#13101E;
-    --ink:#EDE8F5;
-    --ink-muted:#9B93B8;
-    --pine:#7C3AED;
-    --pine-soft:#9D5CF5;
-    --pine-glow:rgba(124,58,237,.25);
-    --gold:#C084FC;
-    --gold-soft:#A855F7;
-    --gold-glow:rgba(168,85,247,.25);
-    --card:#18152A;
-    --line:#2E2547;
-    --danger:#F87171;
-    --danger-soft:rgba(248,113,113,.12);
+    --paper:#0A0A0A;
+    --paper-dim:#111111;
+    --ink:#F5F0E8;
+    --ink-muted:#A89880;
+    --pine:#E8620A;
+    --pine-soft:#FF7A1A;
+    --pine-glow:rgba(232,98,10,.25);
+    --gold:#FF9A3C;
+    --gold-soft:#F97316;
+    --gold-glow:rgba(249,115,22,.25);
+    --card:#161616;
+    --line:#2A2218;
+    --danger:#EF4444;
+    --danger-soft:rgba(239,68,68,.12);
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
@@ -33,8 +33,8 @@
 
   body{
     background:
-      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124,58,237,.18) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 40% at 90% 80%, rgba(168,85,247,.10) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(232,98,10,.12) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 90% 80%, rgba(249,115,22,.08) 0%, transparent 60%),
       var(--paper);
     color:var(--ink);
     font-family:'Work Sans', sans-serif;
@@ -84,7 +84,7 @@
     border-bottom:1px solid var(--line);
     margin-bottom:32px;
     position:sticky;top:0;z-index:100;
-    background:rgba(13,11,20,.88);
+    background:rgba(10,10,10,.92);
     backdrop-filter:blur(16px);
     -webkit-backdrop-filter:blur(16px);
     margin-left:-20px;margin-right:-20px;
@@ -123,12 +123,12 @@
 
   /* ── Setup banner ── */
   .setup{
-    background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(168,85,247,.08));
-    border:1px solid rgba(168,85,247,.3);border-radius:14px;
+    background:linear-gradient(135deg,rgba(232,98,10,.12),rgba(249,115,22,.06));
+    border:1px solid rgba(249,115,22,.25);border-radius:14px;
     padding:18px 22px;margin-bottom:28px;font-size:.92rem;
-    box-shadow:0 2px 20px rgba(124,58,237,.15);
+    box-shadow:0 2px 20px rgba(232,98,10,.1);
   }
-  .setup code{background:rgba(168,85,247,.15);padding:2px 7px;border-radius:5px;font-size:.84em;font-weight:600;color:var(--gold);}
+  .setup code{background:rgba(249,115,22,.15);padding:2px 7px;border-radius:5px;font-size:.84em;font-weight:600;color:var(--gold);}
 
   /* ── Identity card ── */
   .id-card{
@@ -292,14 +292,25 @@
   .task:hover{
     border-color:var(--gold-soft);
     transform:translateY(-3px);
-    box-shadow:0 8px 24px rgba(0,0,0,.3), 0 0 0 1px rgba(168,85,247,.2);
-    background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(168,85,247,.06));
+    box-shadow:0 8px 24px rgba(0,0,0,.3), 0 0 0 1px rgba(249,115,22,.2);
+    background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(249,115,22,.06));
   }
-  .task h3{font-size:1rem;margin-bottom:4px;transition:color .2s;}
-  .task:hover h3{color:var(--pine);}
-  .task .meta{font-size:.79rem;color:var(--ink-muted);margin-bottom:7px;display:flex;align-items:center;gap:6px;}
+  .task h3{font-size:1rem;margin-bottom:4px;transition:color .2s;cursor:pointer;}
+  .task:hover h3{color:var(--gold);}
+  .task .meta{font-size:.79rem;color:var(--ink-muted);margin-bottom:0;display:flex;align-items:center;gap:6px;}
   .task .meta::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold-soft);flex-shrink:0;}
-  .task p{margin:0 0 7px;font-size:.9rem;color:var(--ink-muted);}
+  /* Preview teks singkat — max 2 baris */
+  .task-preview{
+    font-size:.86rem;color:var(--ink-muted);margin-top:6px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    cursor:pointer;
+  }
+  .task-read-more{
+    font-size:.78rem;color:var(--gold);background:none;border:none;
+    cursor:pointer;padding:4px 0 0;font-family:'Work Sans';
+    transition:color .15s;display:inline-block;
+  }
+  .task-read-more:hover{color:var(--pine-soft);}
   .task a.file{
     font-size:.84rem;font-weight:600;color:var(--pine-soft);
     display:inline-flex;align-items:center;gap:5px;
@@ -394,8 +405,8 @@
     transition:background .15s, color .15s;
     font-family:'Work Sans';
   }
-  .rte-btn:hover{background:rgba(168,85,247,.15);color:var(--gold);}
-  .rte-btn.active{background:rgba(168,85,247,.2);color:var(--gold);}
+  .rte-btn:hover{background:rgba(249,115,22,.15);color:var(--gold);}
+  .rte-btn.active{background:rgba(249,115,22,.2);color:var(--gold);}
   .rte-sep{width:1px;height:20px;background:var(--line);margin:0 4px;}
   .rte-select{
     background:rgba(255,255,255,.06);border:1px solid var(--line);
@@ -433,6 +444,29 @@
   .task-content h3{font-size:.94rem;color:var(--gold) !important;margin:.2em 0;}
   .task-content ul,.task-content ol{padding-left:1.3em;margin:.2em 0;}
   .task-content span{background:transparent !important;}
+
+  /* ── Modal detail tugas ── */
+  #modalTask .modal-box{max-width:680px;}
+  #modalTask .task-content-full{
+    max-height:60vh;overflow-y:auto;
+    padding:4px 2px;margin-top:12px;
+    font-size:.94rem;line-height:1.75;color:var(--ink-muted);
+  }
+  #modalTask .task-content-full *{background:transparent !important;color:inherit !important;}
+  #modalTask .task-content-full b,
+  #modalTask .task-content-full strong{color:var(--ink) !important;font-weight:700;}
+  #modalTask .task-content-full h2{color:var(--gold) !important;font-size:1.1rem;margin:.5em 0 .2em;}
+  #modalTask .task-content-full h3{color:var(--gold) !important;font-size:1rem;margin:.4em 0 .2em;}
+  #modalTask .task-content-full ul,
+  #modalTask .task-content-full ol{padding-left:1.4em;margin:.3em 0;}
+  #modalTask .task-meta-row{
+    display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;
+  }
+  #modalTask .task-chip{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:4px 12px;border-radius:99px;font-size:.78rem;font-weight:600;
+    background:rgba(249,115,22,.12);color:var(--gold);border:1px solid rgba(249,115,22,.2);
+  }
 
   /* ===== MODAL ===== */
   .modal-overlay{
@@ -526,6 +560,58 @@
     <div class="modal-actions">
       <button class="btn secondary" onclick="closeProfileModal()">Batal</button>
       <button class="btn" onclick="saveProfileModal()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detail Tugas -->
+<div class="modal-overlay" id="modalTask">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeTaskModal()">×</button>
+    <h2 id="modalTaskJudul"></h2>
+    <div class="task-meta-row" id="modalTaskMeta"></div>
+    <div class="task-content-full" id="modalTaskContent"></div>
+    <div id="modalTaskLink" style="margin-top:14px;"></div>
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closeTaskModal()">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Edit Tugas -->
+<div class="modal-overlay" id="modalEditTask">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeEditTaskModal()">×</button>
+    <h2>Edit Tugas</h2>
+    <input type="hidden" id="editTaskId">
+    <label>Judul tugas</label>
+    <input type="text" id="editJudul" placeholder="Judul tugas">
+    <label>Pertemuan / minggu ke</label>
+    <input type="text" id="editPertemuan" placeholder="Misal: Pertemuan 6">
+    <label>Jam pengumpulan</label>
+    <input type="time" id="editJam">
+    <label>Tanggal dikumpulkan</label>
+    <input type="date" id="editTanggal">
+    <label>Isi / konten tugas</label>
+    <div class="rte-wrap">
+      <div class="rte-toolbar" id="rteEditToolbar">
+        <button type="button" class="rte-btn" data-cmd="bold"><b>B</b></button>
+        <button type="button" class="rte-btn" data-cmd="italic"><i>I</i></button>
+        <button type="button" class="rte-btn" data-cmd="underline"><u>U</u></button>
+        <div class="rte-sep"></div>
+        <button type="button" class="rte-btn" data-cmd="insertUnorderedList">☰</button>
+        <button type="button" class="rte-btn" data-cmd="insertOrderedList">1.</button>
+        <div class="rte-sep"></div>
+        <button type="button" class="rte-btn" data-cmd="removeFormat">✕</button>
+      </div>
+      <div class="rte-editor" id="rteEditEditor" contenteditable="true" spellcheck="false"
+        data-placeholder="Edit isi tugas..."></div>
+    </div>
+    <label>Link file pendukung (opsional)</label>
+    <input type="url" id="editLink" placeholder="https://drive.google.com/...">
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closeEditTaskModal()">Batal</button>
+      <button class="btn" onclick="saveEditTask()">Simpan perubahan</button>
     </div>
   </div>
 </div>
@@ -635,6 +721,8 @@
       <input type="url" id="fLink" placeholder="https://drive.google.com/...">
       <label>Tanggal dikumpulkan</label>
       <input type="date" id="fTanggal" required>
+      <label>Jam pengumpulan</label>
+      <input type="time" id="fJam">
       <div style="margin-top:16px;display:flex;gap:10px;align-items:center;">
         <button class="btn" type="submit">Kumpulkan tugas</button>
         <button type="button" class="btn secondary" onclick="clearRTE()">Bersihkan</button>
@@ -823,8 +911,8 @@ function copyBlobId(){
           : p.maxOpacity;
 
       const grad = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.size);
-      grad.addColorStop(0, `rgba(168,85,247,${p.opacity})`);
-      grad.addColorStop(0.5, `rgba(124,58,237,${p.opacity * 0.6})`);
+      grad.addColorStop(0, `rgba(249,115,22,${p.opacity})`);
+      grad.addColorStop(0.5, `rgba(232,98,10,${p.opacity * 0.6})`);
       grad.addColorStop(1, 'transparent');
       ctx.beginPath();
       ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
@@ -879,22 +967,33 @@ function render(){
   if (tasks.length === 0){
     list.innerHTML = '<p class="empty">Belum ada tugas yang dikumpulkan.</p>';
   } else {
-    list.innerHTML = tasks.map((t, i) => `
-      <div class="task reveal is-visible" style="animation-delay:${i*60}ms">
+    list.innerHTML = tasks.map((t, i) => {
+      const plainText = t.content
+        ? (new DOMParser().parseFromString(t.content,'text/html').body.textContent || '').trim()
+        : (t.deskripsi || '');
+      const preview = plainText.length > 120 ? plainText.slice(0,120) + '…' : plainText;
+      const metaParts = [
+        t.pertemuan ? `<span>${escapeHtml(t.pertemuan)}</span>` : '',
+        t.tanggal   ? `<span>${formatDate(t.tanggal)}</span>` : '',
+        t.jam       ? `<span>🕐 ${escapeHtml(t.jam)}</span>` : ''
+      ].filter(Boolean).join('<span style="opacity:.4">·</span>');
+
+      return `
+      <div class="task reveal is-visible" style="animation-delay:${i*60}ms" onclick="openTaskModal('${t.id}')">
         <div class="task-num">${tasks.length - i}</div>
         <div style="flex:1;min-width:0;">
           <h3>${escapeHtml(t.judul)}</h3>
-          <div class="meta">${escapeHtml(t.pertemuan || '')}${t.pertemuan ? ' · ' : ''}${formatDate(t.tanggal)}</div>
-          ${t.content ? `<div class="task-content">${t.content}</div>` :
-            t.deskripsi ? `<p>${escapeHtml(t.deskripsi)}</p>` : ''}
-          ${t.link ? `<a class="file" href="${escapeAttr(t.link)}" target="_blank" rel="noopener">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Buka file pendukung
-          </a>` : ''}
+          <div class="meta">${metaParts}</div>
+          ${preview ? `<div class="task-preview">${escapeHtml(preview)}</div>` : ''}
+          <button class="task-read-more" onclick="event.stopPropagation();openTaskModal('${t.id}')">Baca selengkapnya →</button>
         </div>
-        ${isAdmin ? `<div class="actions"><button class="btn danger" onclick="deleteTask('${t.id}')">Hapus</button></div>` : ''}
-      </div>
-    `).join('');
+        ${isAdmin ? `
+          <div class="actions" onclick="event.stopPropagation()">
+            <button class="btn secondary" style="padding:5px 11px;font-size:.78rem;" onclick="openEditTaskModal('${t.id}')">Edit</button>
+            <button class="btn danger" onclick="deleteTask('${t.id}')">Hapus</button>
+          </div>` : ''}
+      </div>`;
+    }).join('');
   }
 }
 
@@ -1005,6 +1104,72 @@ function closeProfileModal(){
   document.getElementById('modalProfile').classList.remove('open');
 }
 
+/* ====== MODAL DETAIL TUGAS ====== */
+function openTaskModal(id){
+  const t = state.tasks.find(x => x.id === id);
+  if(!t) return;
+  document.getElementById('modalTaskJudul').textContent = t.judul;
+  const meta = [
+    t.pertemuan ? `<span class="task-chip">📚 ${escapeHtml(t.pertemuan)}</span>` : '',
+    t.tanggal   ? `<span class="task-chip">📅 ${formatDate(t.tanggal)}</span>` : '',
+    t.jam       ? `<span class="task-chip">🕐 ${escapeHtml(t.jam)}</span>` : ''
+  ].filter(Boolean).join('');
+  document.getElementById('modalTaskMeta').innerHTML = meta;
+  document.getElementById('modalTaskContent').innerHTML =
+    t.content || (t.deskripsi ? escapeHtml(t.deskripsi) : '<em>Tidak ada konten.</em>');
+  const linkEl = document.getElementById('modalTaskLink');
+  linkEl.innerHTML = t.link
+    ? `<a class="file" href="${escapeAttr(t.link)}" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Buka file pendukung
+       </a>` : '';
+  document.getElementById('modalTask').classList.add('open');
+}
+function closeTaskModal(){
+  document.getElementById('modalTask').classList.remove('open');
+}
+
+/* ====== MODAL EDIT TUGAS ====== */
+function openEditTaskModal(id){
+  const t = state.tasks.find(x => x.id === id);
+  if(!t) return;
+  document.getElementById('editTaskId').value   = t.id;
+  document.getElementById('editJudul').value    = t.judul || '';
+  document.getElementById('editPertemuan').value= t.pertemuan || '';
+  document.getElementById('editJam').value      = t.jam || '';
+  document.getElementById('editTanggal').value  = t.tanggal || '';
+  document.getElementById('editLink').value     = t.link || '';
+  document.getElementById('rteEditEditor').innerHTML = t.content || '';
+  document.getElementById('modalEditTask').classList.add('open');
+  /* inisialisasi toolbar edit */
+  initRTEToolbar(
+    document.getElementById('rteEditToolbar'),
+    document.getElementById('rteEditEditor')
+  );
+}
+function closeEditTaskModal(){
+  document.getElementById('modalEditTask').classList.remove('open');
+}
+async function saveEditTask(){
+  const id = document.getElementById('editTaskId').value;
+  const idx = state.tasks.findIndex(x => x.id === id);
+  if(idx === -1) return;
+  const rawContent = document.getElementById('rteEditEditor').innerHTML.trim();
+  state.tasks[idx] = {
+    ...state.tasks[idx],
+    judul:     document.getElementById('editJudul').value.trim(),
+    pertemuan: document.getElementById('editPertemuan').value.trim(),
+    jam:       document.getElementById('editJam').value || '',
+    tanggal:   document.getElementById('editTanggal').value,
+    link:      document.getElementById('editLink').value.trim(),
+    content:   sanitizeRTE(rawContent)
+  };
+  closeEditTaskModal();
+  render();
+  showToast('Tugas berhasil diperbarui', '✏️');
+  await saveData();
+}
+
 async function submitTask(e){
   e.preventDefault();
   const rawContent = document.getElementById('rteEditor').innerHTML.trim();
@@ -1012,12 +1177,12 @@ async function submitTask(e){
     alert('Isi konten tugas tidak boleh kosong.');
     return;
   }
-  /* Bersihkan inline style agar tidak ada background putih */
   const cleanContent = sanitizeRTE(rawContent);
   const task = {
     id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
     judul: document.getElementById('fJudul').value.trim(),
     pertemuan: document.getElementById('fPertemuan').value.trim(),
+    jam: document.getElementById('fJam').value || '',
     content: cleanContent,
     link: document.getElementById('fLink').value.trim(),
     tanggal: document.getElementById('fTanggal').value
@@ -1086,7 +1251,7 @@ document.addEventListener('click', function(e){
 
 /* ====== KONFETI saat tugas berhasil dikumpulkan ====== */
 function launchConfetti(){
-  const colors = ['#A855F7','#7C3AED','#C084FC','#6D28D9','#fff','#E879F9'];
+  const colors = ['#F97316','#E8620A','#FF9A3C','#EA580C','#fff','#FED7AA'];
   const count = 60;
   for(let i = 0; i < count; i++){
     const el = document.createElement('div');
@@ -1105,57 +1270,24 @@ function launchConfetti(){
 }
 
 /* ====== RICH TEXT EDITOR ====== */
-(function initRTE(){
-  const toolbar = document.getElementById('rteToolbar');
-  const editor  = document.getElementById('rteEditor');
+function initRTEToolbar(toolbar, editor){
   if(!toolbar || !editor) return;
+  /* hapus listener lama jika ada */
+  const newToolbar = toolbar.cloneNode(true);
+  toolbar.parentNode.replaceChild(newToolbar, toolbar);
 
-  /* Toolbar button click */
-  toolbar.addEventListener('mousedown', e => {
+  newToolbar.addEventListener('mousedown', e => {
     const btn = e.target.closest('.rte-btn');
     if(!btn) return;
     e.preventDefault();
-    const cmd = btn.dataset.cmd;
-    document.execCommand(cmd, false, null);
+    document.execCommand(btn.dataset.cmd, false, null);
     editor.focus();
-    updateActive();
+    updateActive(newToolbar);
   });
 
-  /* Heading select */
-  const headingSel = document.getElementById('rteHeading');
-  if(headingSel){
-    headingSel.addEventListener('change', e => {
-      document.execCommand('formatBlock', false, e.target.value);
-      editor.focus();
-    });
-  }
-
-  /* Update active state tombol */
-  function updateActive(){
-    toolbar.querySelectorAll('.rte-btn[data-cmd]').forEach(btn => {
-      btn.classList.toggle('active', document.queryCommandState(btn.dataset.cmd));
-    });
-  }
-  editor.addEventListener('keyup', updateActive);
-  editor.addEventListener('mouseup', updateActive);
-  editor.addEventListener('selectionchange', updateActive);
-
-  /* Enter di kosong jangan buat <div>, pakai <br> */
-  editor.addEventListener('keydown', e => {
-    if(e.key === 'Enter' && !e.shiftKey){
-      const sel = window.getSelection();
-      if(sel && sel.rangeCount){
-        const block = sel.getRangeAt(0).commonAncestorContainer;
-        const tag = block.nodeName || (block.parentNode && block.parentNode.nodeName);
-        if(tag === 'DIV' || tag === '#text'){
-          /* biarkan default */
-        }
-      }
-    }
-  });
-
-  /* Strip inline style tiap kali konten berubah */
-  editor.addEventListener('input', () => {
+  editor.addEventListener('keyup',  () => updateActive(newToolbar));
+  editor.addEventListener('mouseup',() => updateActive(newToolbar));
+  editor.addEventListener('input',  () => {
     editor.querySelectorAll('[style],[color],[bgcolor],[face]').forEach(el => {
       el.removeAttribute('style');
       el.removeAttribute('color');
@@ -1163,6 +1295,26 @@ function launchConfetti(){
       el.removeAttribute('face');
     });
   });
+}
+
+function updateActive(toolbar){
+  toolbar.querySelectorAll('.rte-btn[data-cmd]').forEach(btn => {
+    btn.classList.toggle('active', document.queryCommandState(btn.dataset.cmd));
+  });
+}
+
+(function initRTE(){
+  const toolbar = document.getElementById('rteToolbar');
+  const editor  = document.getElementById('rteEditor');
+  if(!toolbar || !editor) return;
+  initRTEToolbar(toolbar, editor);
+  const headingSel = document.getElementById('rteHeading');
+  if(headingSel){
+    headingSel.addEventListener('change', e => {
+      document.execCommand('formatBlock', false, e.target.value);
+      editor.focus();
+    });
+  }
 })();
 
 /* ====== animasi tipis ====== */
@@ -1181,6 +1333,15 @@ function setupReveal(){
   });
 }
 setupReveal();
+
+/* Tutup modal saat klik overlay */
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if(e.target === overlay){
+      overlay.classList.remove('open');
+    }
+  });
+});
 
 /* ====== CUSTOM CURSOR ====== */
 (function initCursor(){
